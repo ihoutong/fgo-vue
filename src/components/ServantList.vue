@@ -25,8 +25,8 @@
           <th>Cost</th>
           <th>Base HP</th>
           <th>Base Attack</th>
-          <th>Base HP</th>
           <th>Max HP</th>
+          <th>Max Attack</th>
           <th>Command Cards</th>
           <th>NP</th>
         </tr>
@@ -42,15 +42,6 @@
               </span>
               <span v-else>{{servant[field]}}</span>
           </td>
-          <!-- <td v-for="(value, key) in servant">
-            <span v-if="typeof value === 'string' && value.indexOf('.png') !== -1">
-              <img v-bind:src="require('../'+value)" alt="">
-            </span>
-            <span v-else-if="key === 'cardIds'">
-              <img style="margin-right: -40px;" v-for="card in value" v-bind:src="require('../assets/images/cmdCard/'+card+'.png')" alt="">
-            </span>
-            <span v-else>{{value}}</span>
-          </td> -->
         </tr>
       </tbody>
     </table>
@@ -65,7 +56,6 @@ import classes from '../assets/class.json';
 import CardOptions from './CardOptions.vue';
 
 //add class filter
-//
 export default {
   name: 'HelloWorld',
   components: {
@@ -96,9 +86,6 @@ export default {
     }
   },
   created: function (){
-    //require('../assets/images/cmdCard/'+card+'.png')
-
-    //var fields_to_store = ['collectionNo', 'cardIds', 'id', 'name', 'classId', 'cost'];
     for (var i = 0; i < servant.length; i++){
       var temp_obj = {};
 
@@ -136,18 +123,6 @@ export default {
       temp_obj.collectionNo = parseInt(temp_obj.collectionNo);
       temp_obj['np_card'] = np.cardId;
 
-      // temp_obj['rarity'] = stat.rarity;
-      // temp_obj['np_card'] = 'assets/images/cmdCard/'+np.cardId+'.png';
-      // temp_obj['hp_base'] = stat.hpBase;
-      // temp_obj['hp_max'] = stat.hpMax;
-      // temp_obj['atk_base'] = stat.atkBase;
-      // temp_obj['atk_max'] = stat.atkMax;
-      // temp_obj['class_img'] = 'assets/images/class/class_'+class_data.iconImageId+'_'+temp_obj.rarity+'.png';
-      // temp_obj['np'] = np;
-      // temp_obj['stats'] = stat
-      // temp_obj['servant'] = servant[i];
-      // temp_obj['class'] = class_data;
-
       this.servants_original.push(temp_obj);
     }
 
@@ -160,11 +135,6 @@ export default {
       }
       return 0;
     });
-    /* Servants have a type of 1,2,5,9 or 99 and a collectionNo
-    var type_arr = [1, 2, 5, 9, 99];
-    this.servants = servant.filter(function (a){
-      return type_arr.includes(a.type) && a.collectionNo != 0;
-    });*/
   },
   computed: {
     servants: function (){
@@ -199,7 +169,6 @@ export default {
   },
   methods: {
     show_filters: function (){
-      console.log('dasdasd');
       this.hide_filters = !this.hide_filters;
     }
   }

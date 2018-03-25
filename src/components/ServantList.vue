@@ -64,7 +64,6 @@ export default {
   data: function () {
     return {
       servants_original: [],
-      servant_json: {},
       cardoptions_values: {
         0:0,
         1:1,
@@ -121,7 +120,15 @@ export default {
         }
       }
       temp_obj.collectionNo = parseInt(temp_obj.collectionNo);
-      temp_obj['np_card'] = np.cardId;
+      temp_obj.np_card = np.cardId;
+      temp_obj.card_count = {
+        1: 0,
+        2: 0,
+        3: 0
+      };
+      for (let i = 0; i < temp_obj.cardIds.length; i++){
+        temp_obj.card_count[temp_obj.cardIds[i]]++;
+      }
 
       this.servants_original.push(temp_obj);
     }
@@ -138,32 +145,24 @@ export default {
   },
   computed: {
     servants: function (){
-      var cards_selected = [];
-      for (let i = 0; i < this.buster; i++){
-        cards_selected.push(2);
-      }
-      for (let i = 0; i < this.quick; i++){
-        cards_selected.push(3);
-      }
-      for (let i = 0; i < this.arts; i++){
-        cards_selected.push(1);
-      }
+      var cards_selected = {
+        1: this.arts,
+        2: this.buster,
+        3: this.quick
+      };
 
       return this.servants_original.filter(obj => {
-        var cards_copy = cards_selected.slice();
-        for (var i = 0; i < obj.cardIds.length; i++){
-          if (cards_copy.length == 0 && (this.np_type == 0 || this.np_type == obj.np_card)){
-            return true;
-          }
-          var index_of = cards_copy.indexOf(obj.cardIds[i]);
-          if (index_of == -1){
+        for (let x in cards_selected){
+          if (cards_selected[x] == 0){
             continue;
           }
 
-          cards_copy.splice(index_of, 1);
+          if (obj.card_count[x] != cards_selected[x]){
+            return false;
+          }
         }
 
-        return cards_copy.length == 0 && (this.np_type == 0 || this.np_type == obj.np_card);
+        return (this.np_type == 0 || this.np_type == obj.np_card);
       });
     }
   },

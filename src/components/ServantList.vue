@@ -101,6 +101,11 @@ export default {
         return obj.id == servant[i].classId;
       });
 
+      //np name
+      // var np_name = master.mstTreasureDevice.find(obj => {
+      //   return obj.id == np.treasureDeviceId
+      // });
+
       for (var x = 0; x < this.display_fields.length; x++){
         var field_name = this.display_fields[x];
         if (['rarity', 'hpBase', 'atkBase', 'hpMax', 'atkMax'].indexOf(field_name) !== -1){
@@ -126,6 +131,9 @@ export default {
         2: 0,
         3: 0
       };
+
+      //temp_obj.np_name = np_name.ruby;
+
       for (let i = 0; i < temp_obj.cardIds.length; i++){
         temp_obj.card_count[temp_obj.cardIds[i]]++;
       }

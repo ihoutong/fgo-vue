@@ -17,23 +17,12 @@
     <table class="table">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Rarity</th>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Class</th>
-          <th>Cost</th>
-          <th>Base HP</th>
-          <th>Base Attack</th>
-          <th>Max HP</th>
-          <th>Max Attack</th>
-          <th>Command Cards</th>
-          <th>NP</th>
+          <th v-for="(value, key) in display_fields" v-on:click="sort_servants(key)" class="pointer">{{value}}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="servant in servants">
-          <td v-for="field in display_fields">
+          <td v-for="(value, field) in display_fields">
               <span v-if="typeof servant[field] === 'string' && servant[field].indexOf('.png') !== -1">
                 <img v-bind:src="require('../'+servant[field])" alt="">
               </span>
@@ -57,7 +46,7 @@ import CardOptions from './CardOptions.vue';
 
 //add class filter
 export default {
-  name: 'HelloWorld',
+  name: 'ServantList',
   components: {
     CardOptions
   },
@@ -80,8 +69,25 @@ export default {
       quick: 0,
       arts: 0,
       np_type: 0,
-      display_fields: ['collectionNo', 'rarity', 'image', 'name', 'class', 'cost', 'hpBase', 'atkBase', 'hpMax', 'atkMax', 'cardIds', 'np'],
-      hide_filters: true
+      display_fields: {
+        collectionNo: 'ID',
+        rarity: 'Rarity',
+        image: 'Image',
+        name: 'Name',
+        class: 'Class',
+        cost: 'Cost',
+        hpBase: 'Base HP',
+        atkBase: 'Base Attack',
+        hpMax: 'Max HP',
+        atkMax: 'Max Attack',
+        cardIds: 'Command Cards',
+        np: 'NP'
+      },
+      hide_filters: true,
+      sort: {
+        field: 'collectionNo',
+        direction: 1  //1 for ascending, -1 for descending
+      }
     }
   },
   created: function (){
@@ -106,8 +112,9 @@ export default {
       //   return obj.id == np.treasureDeviceId
       // });
 
-      for (var x = 0; x < this.display_fields.length; x++){
-        var field_name = this.display_fields[x];
+      // for (var x = 0; x < this.display_fields.length; x++){
+      //   var field_name = this.display_fields[x];
+      for (let field_name in this.display_fields){
         if (['rarity', 'hpBase', 'atkBase', 'hpMax', 'atkMax'].indexOf(field_name) !== -1){
           temp_obj[field_name] = stat[field_name];
         }
@@ -121,7 +128,7 @@ export default {
           temp_obj[field_name] = 'assets/images/faces/'+servant[i].id+'0.png';
         }
         else{
-          temp_obj[this.display_fields[x]] = servant[i][this.display_fields[x]];
+          temp_obj[field_name] = servant[i][field_name];
         }
       }
       temp_obj.collectionNo = parseInt(temp_obj.collectionNo);
@@ -159,7 +166,7 @@ export default {
         3: this.quick
       };
 
-      return this.servants_original.filter(obj => {
+      let filtered_servants = this.servants_original.filter(obj => {
         for (let x in cards_selected){
           if (cards_selected[x] == 0){
             continue;
@@ -172,11 +179,36 @@ export default {
 
         return (this.np_type == 0 || this.np_type == obj.np_card);
       });
+
+
+      return filtered_servants.sort((a,b) => {
+        if (a[this.sort.field] < b[this.sort.field]){
+          return -1 * this.sort.direction;
+        }
+        else if (a[this.sort.field] > b[this.sort.field]){
+          return 1 * this.sort.direction;
+        }
+        return 0;
+      });
     }
   },
   methods: {
     show_filters: function (){
       this.hide_filters = !this.hide_filters;
+    },
+    sort_servants: function (key){
+      if (typeof this.display_fields[key] === "undefined"){
+        alert('ERROR: Invalid sort found');
+        return;
+      }
+
+      if (key != this.sort.field){
+        this.sort.field = key;
+        this.sort.direction = 1;
+      }
+      else{
+        this.sort.direction *= -1;
+      }
     }
   }
 }

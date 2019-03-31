@@ -1,0 +1,210 @@
+<template>
+  <div>
+    <div class="filter-container">
+      <div class="pointer" v-on:click="show_filters()">
+        Filters &#709;
+      </div>
+      <div v-bind:class="{'d-none': hide_filters}">
+        Card Distribution
+        <div class="row">
+          <CardOptions v-bind:display_name="'Number of Buster'" v-bind:values="cardoptions_values" v-model="buster"/>
+          <CardOptions v-bind:display_name="'Number of Quick'" v-bind:values="cardoptions_values" v-model="quick"/>
+          <CardOptions v-bind:display_name="'Number of Arts'" v-bind:values="cardoptions_values" v-model="arts"/>
+          <CardOptions v-bind:display_name="'Np Type'" v-bind:values="np_options" v-model="np_type" />
+        </div>
+      </div>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th v-for="(value, key) in display_fields" :key="key" @click="sort_servants(key)" class="pointer">{{value}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="servant in servants" :key="servant['ID']">
+          <td v-for="(value, field) in display_fields" :key="field">
+              <span v-if="typeof servant[field] === 'string' && servant[field].indexOf('.png') !== -1">
+                <img v-bind:src="require('../'+servant[field])" alt="">
+              </span>
+              <span v-else-if="field === 'cardIds'">
+                <img style="margin-right: -40px;" v-for="(card, key) in servant[field]" :key="key" :bind:src="require(`../assets/images/cmdCard/${card}.png`)" alt="">
+              </span>
+              <span v-else>{{servant[field]}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import servant from '../assets/servant.json';
+import servantNp from '../assets/servantNp.json';
+import servantStat from '../assets/servantStat.json';
+import classes from '../assets/class.json';
+import CardOptions from '../components/CardOptions.vue';
+
+// add class filter
+export default {
+  name: 'ServantList',
+  components: {
+    CardOptions,
+  },
+  data() {
+    return {
+      servants_original: [],
+      cardoptions_values: {
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 3,
+      },
+      np_options: {
+        Any: 0,
+        Buster: 2,
+        Quick: 3,
+        Arts: 1,
+      },
+      buster: 0,
+      quick: 0,
+      arts: 0,
+      np_type: 0,
+      display_fields: {
+        collectionNo: 'ID',
+        rarity: 'Rarity',
+        image: 'Image',
+        name: 'Name',
+        class: 'Class',
+        cost: 'Cost',
+        hpBase: 'Base HP',
+        atkBase: 'Base Attack',
+        hpMax: 'Max HP',
+        atkMax: 'Max Attack',
+        cardIds: 'Command Cards',
+        np: 'NP',
+      },
+      hide_filters: true,
+      sort: {
+        field: 'collectionNo',
+        direction: 1, // 1 for ascending, -1 for descending
+      },
+    };
+  },
+  created() {
+    for (let i = 0; i < servant.length; i += 1) {
+      const tempObj = {};
+
+      // For now just pull the cardid. In the future, pull the damage distribution too. Maybe even the strengthening availability
+      const np = servantNp.find(obj => obj.num === 1 && obj.svtId === servant[i].id);
+      const stat = servantStat.find(obj => obj.svtId === servant[i].id);
+      const classData = classes.find(obj => obj.id == servant[i].classId);
+
+      //np name
+      // var np_name = master.mstTreasureDevice.find(obj => {
+      //   return obj.id == np.treasureDeviceId
+      // });
+
+      // for (var x = 0; x < this.display_fields.length; x++){
+      //   var field_name = this.display_fields[x];
+
+      Object.keys(this.display_fields).forEach((key) => {
+        if (['rarity', 'hpBase', 'atkBase', 'hpMax', 'atkMax'].indexOf(key) !== -1) {
+          tempObj[key] = stat[key];
+        } else if (key === 'np') {
+          tempObj[key] = `assets/images/cmdCard/${np.cardId}.png`;
+        } else if (key === 'class') {
+          tempObj[key] = `assets/images/class/class_${classData.iconImageId}_${tempObj.rarity}.png`;
+        } else if (key === 'image') {
+          tempObj[key] = `assets/images/faces/${servant[i].id}0.png`;
+        } else {
+          tempObj[key] = servant[i][key];
+        }
+      });
+      tempObj.collectionNo = parseInt(tempObj.collectionNo, 10);
+      tempObj.np_card = np.cardId;
+      tempObj.card_count = {
+        1: 0,
+        2: 0,
+        3: 0,
+      };
+
+      // tempObj.np_name = np_name.ruby;
+      for (let x = 0; i < tempObj.cardIds.length; x += 1) {
+        tempObj.card_count[tempObj.cardIds[x]] += 1;
+      }
+
+      this.servants_original.push(tempObj);
+    }
+
+    this.servants_original.sort((a, b) => {
+      if (a.collectionNo < b.collectionNo) {
+        return -1;
+      }
+
+      if (a.collectionNo > b.collectionNo) {
+        return 1;
+      }
+      return 0;
+    });
+  },
+  computed: {
+    servants() {
+      const cardsSelected = {
+        1: this.arts,
+        2: this.buster,
+        3: this.quick,
+      };
+
+      const filteredServants = this.servants_original.filter((obj) => {
+        for (let x in cardsSelected) {
+          if (cardsSelected[x] === 0) {
+            continue;
+          }
+
+          if (obj.card_count[x] !== cardsSelected[x]) {
+            return false;
+          }
+        }
+
+        return (this.np_type === 0 || this.np_type === obj.np_card);
+      });
+
+
+      return filteredServants.sort((a, b) => {
+        if (a[this.sort.field] < b[this.sort.field]) {
+          return -1 * this.sort.direction;
+        }
+
+        if (a[this.sort.field] > b[this.sort.field]) {
+          return 1 * this.sort.direction;
+        }
+
+        return 0;
+      });
+    },
+  },
+  methods: {
+    show_filters() {
+      this.hide_filters = !this.hide_filters;
+    },
+    sort_servants(key) {
+      if (key !== this.sort.field) {
+        this.sort.field = key;
+        this.sort.direction = 1;
+      } else {
+        this.sort.direction *= -1;
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss">
+img {
+  width: 62px;
+  height: auto;
+}
+.filter-container {
+  padding-bottom: 10px;
+}
+</style>

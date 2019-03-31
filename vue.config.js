@@ -1,7 +1,7 @@
-module.exports = {
-  configureWebpack: {
-    output: {
-      publicPath: './'
-    }
-  }
-}
+// module.exports = {
+//   configureWebpack: {
+//     output: {
+//       publicPath: './'
+//     }
+//   }
+// }

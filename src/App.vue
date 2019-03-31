@@ -13,9 +13,7 @@
 </template>
 
 <script>
-import ServantList from './components/ServantList.vue'
-
 export default {
-  name: 'app'
-}
+  name: 'app',
+};
 </script>

@@ -14,13 +14,13 @@ export default {
     display_name: String,
     values: Object,
   },
-  data: function () {
+  data() {
     return {
-      dropdown_value: ''
-    }
+      dropdown_value: '',
+    };
   },
   watch: {
-    dropdown_value (val){
+    dropdown_value(val) {
       this.$emit('input', val);
     }
   }

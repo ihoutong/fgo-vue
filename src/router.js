@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import ServantList from './components/ServantList.vue'
-import CraftEssenceList from './components/CraftEssenceList.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import ServantList from './views/ServantList.vue';
+import CraftEssenceList from './views/CraftEssenceList.vue';
 
 Vue.use(Router)
 
@@ -10,15 +10,15 @@ export default new Router({
     {
       path: '/',
       name: 'ServantList',
-      component: ServantList
+      component: ServantList,
     },
     {
       path: '/ce',
       name: 'CraftEssenceList',
-      component: CraftEssenceList
+      component: CraftEssenceList,
     }
   ],
-  linkExactActiveClass: "active"
+  linkExactActiveClass: 'active',
 })
 
 // {

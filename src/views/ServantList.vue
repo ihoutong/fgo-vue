@@ -27,7 +27,7 @@
                 <img v-bind:src="require('../'+servant[field])" alt="">
               </span>
               <span v-else-if="field === 'cardIds'">
-                <img style="margin-right: -40px;" v-for="(card, key) in servant[field]" :key="key" :bind:src="require(`../assets/images/cmdCard/${card}.png`)" alt="">
+                <img style="margin-right: -40px;" v-for="(card, key) in servant[field]" :key="key" :src="require(`../assets/images/cmdCard/${card}.png`)" alt="">
               </span>
               <span v-else>{{servant[field]}}</span>
           </td>
@@ -91,13 +91,14 @@ export default {
     };
   },
   created() {
+
     for (let i = 0; i < servant.length; i += 1) {
       const tempObj = {};
 
       // For now just pull the cardid. In the future, pull the damage distribution too. Maybe even the strengthening availability
       const np = servantNp.find(obj => obj.num === 1 && obj.svtId === servant[i].id);
       const stat = servantStat.find(obj => obj.svtId === servant[i].id);
-      const classData = classes.find(obj => obj.id == servant[i].classId);
+      const classData = classes.find(obj => obj.id === servant[i].classId);
 
       //np name
       // var np_name = master.mstTreasureDevice.find(obj => {
@@ -129,7 +130,7 @@ export default {
       };
 
       // tempObj.np_name = np_name.ruby;
-      for (let x = 0; i < tempObj.cardIds.length; x += 1) {
+      for (let x = 0; x < tempObj.cardIds.length; x += 1) {
         tempObj.card_count[tempObj.cardIds[x]] += 1;
       }
 

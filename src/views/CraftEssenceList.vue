@@ -1,11 +1,7 @@
 <template lang="html">
   <div>
     <table class="table">
-      <thead>
-        <tr>
-          <th v-for="(value, key) in display_fields" :key="key" @click="sort_list(key)" class="pointer">{{value}}</th>
-        </tr>
-      </thead>
+      <TableHeader :displayFields="display_fields" @sort="sort_list" />
       <tbody>
         <tr v-for="(ce, key) in ce_list" :key="key">
           <td v-for="(value, field) in display_fields" :key="field">
@@ -21,11 +17,15 @@
 </template>
 
 <script>
+import TableHeader from '../components/TableHeader.vue';
 import ce from '../assets/craftEssence.json';
 import servantStat from '../assets/servantStat.json';
 
 export default {
   name: 'CraftEssenceList',
+  components: {
+    TableHeader,
+  },
   data() {
     return {
       original_ce_list: [],

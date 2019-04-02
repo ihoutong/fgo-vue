@@ -15,11 +15,7 @@
       </div>
     </div>
     <table class="table">
-      <thead>
-        <tr>
-          <th v-for="(value, key) in display_fields" :key="key" @click="sort_servants(key)" class="pointer">{{value}}</th>
-        </tr>
-      </thead>
+      <TableHeader :displayFields="display_fields" @sort="sort_servants" />
       <tbody>
         <tr v-for="servant in servants" :key="servant['ID']">
           <td v-for="(value, field) in display_fields" :key="field">
@@ -43,12 +39,14 @@ import servantNp from '../assets/servantNp.json';
 import servantStat from '../assets/servantStat.json';
 import classes from '../assets/class.json';
 import CardOptions from '../components/CardOptions.vue';
+import TableHeader from '../components/TableHeader.vue';
 
 // add class filter
 export default {
   name: 'ServantList',
   components: {
     CardOptions,
+    TableHeader,
   },
   data() {
     return {
@@ -91,7 +89,6 @@ export default {
     };
   },
   created() {
-
     for (let i = 0; i < servant.length; i += 1) {
       const tempObj = {};
 
@@ -189,6 +186,7 @@ export default {
       this.hide_filters = !this.hide_filters;
     },
     sort_servants(key) {
+      console.log(key);
       if (key !== this.sort.field) {
         this.sort.field = key;
         this.sort.direction = 1;

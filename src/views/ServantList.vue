@@ -89,13 +89,14 @@ export default {
     };
   },
   created() {
-    for (let i = 0; i < servant.length; i += 1) {
+    this.servants_original = servant.map((servantObj) => {
       const tempObj = {};
 
-      // For now just pull the cardid. In the future, pull the damage distribution too. Maybe even the strengthening availability
-      let np = servantNp.find(obj => obj.num === 1 && obj.svtId === servant[i].id);
-      const stat = servantStat.find(obj => obj.svtId === servant[i].id);
-      const classData = classes.find(obj => obj.id === servant[i].classId);
+      // For now just pull the cardid. In the future, pull the damage distribution too.
+      // Maybe even the strengthening availability
+      let np = servantNp.find(obj => obj.num === 1 && obj.svtId === servantObj.id);
+      const stat = servantStat.find(obj => obj.svtId === servantObj.id);
+      const classData = classes.find(obj => obj.id === servantObj.classId);
 
       if (np === undefined) {
         np = {
@@ -103,7 +104,7 @@ export default {
         };
       }
 
-      //np name
+      // np name
       // var np_name = master.mstTreasureDevice.find(obj => {
       //   return obj.id == np.treasureDeviceId
       // });
@@ -119,9 +120,9 @@ export default {
         } else if (key === 'class') {
           tempObj[key] = `assets/images/class/class_${classData.iconImageId}_${tempObj.rarity}.png`;
         } else if (key === 'image') {
-          tempObj[key] = `assets/images/faces/${servant[i].id}0.png`;
+          tempObj[key] = `assets/images/faces/${servantObj.id}0.png`;
         } else {
-          tempObj[key] = servant[i][key];
+          tempObj[key] = servantObj[key];
         }
       });
       tempObj.collectionNo = parseInt(tempObj.collectionNo, 10);
@@ -137,8 +138,8 @@ export default {
         tempObj.card_count[tempObj.cardIds[x]] += 1;
       }
 
-      this.servants_original.push(tempObj);
-    }
+      return tempObj;
+    });
 
     this.servants_original.sort((a, b) => {
       if (a.collectionNo < b.collectionNo) {

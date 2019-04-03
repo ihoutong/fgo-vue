@@ -12,9 +12,6 @@ export default {
   props: {
     displayFields: Object,
   },
-  created() {
-    console.log(this.displayFields);
-  },
   methods: {
     sortList(key) {
       this.$emit('sort', key);

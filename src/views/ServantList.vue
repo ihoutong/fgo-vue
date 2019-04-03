@@ -93,9 +93,15 @@ export default {
       const tempObj = {};
 
       // For now just pull the cardid. In the future, pull the damage distribution too. Maybe even the strengthening availability
-      const np = servantNp.find(obj => obj.num === 1 && obj.svtId === servant[i].id);
+      let np = servantNp.find(obj => obj.num === 1 && obj.svtId === servant[i].id);
       const stat = servantStat.find(obj => obj.svtId === servant[i].id);
       const classData = classes.find(obj => obj.id === servant[i].classId);
+
+      if (np === undefined) {
+        np = {
+          cardId: 1,
+        };
+      }
 
       //np name
       // var np_name = master.mstTreasureDevice.find(obj => {
@@ -186,7 +192,6 @@ export default {
       this.hide_filters = !this.hide_filters;
     },
     sort_servants(key) {
-      console.log(key);
       if (key !== this.sort.field) {
         this.sort.field = key;
         this.sort.direction = 1;

@@ -41,6 +41,52 @@ import classes from '../assets/class.json';
 import CardOptions from '../components/CardOptions.vue';
 import TableHeader from '../components/TableHeader.vue';
 
+/*
+write(toJSON(old_servants), "servants.bak.json");
+write(toJSON(valid_servants), "servant.json");
+write(toJSON(data$mstSvtLimit), "servantStat.json")
+#contains servant id, damage distribtuion, rankup/interlude
+write(toJSON(data$mstSvtTreasureDevice), "servantNp.json")
+
+# contains the np name and rank this id === treasureDeviceId from above
+# typeText = ranking
+write(toJSON(data$mstTreasureDevice), "servantNpName.json")
+
+#mstQuest.id === mstTreasureDevice[x].condQuestId
+write(toJSON(data$mstQuest), "quests.json")
+
+#mstTreasureDeviceDetail.id === $mstTreasureDevice.id
+write(toJSON(data$mstTreasureDeviceDetail), 'npDescrption.json')
+
+#mstCombineLimit.id === mstSvt.id. ALSO, svtLimit === ascension level
+write(toJSON(data$mstCombineLimit), 'ascensionMats.json');
+
+#mstCombineSkill.id === mstSvt.id
+write(toJSON(data$mstCombineSkill), 'skillMats.json');
+
+#mstSvtExp.type === mstSvt.expType
+#figure out how to use this later. For now, just keep this here
+write(toJSON(data$mstSvtExp), 'expCurve.json');
+
+
+#iconId === icon id ()SkillIcon_ICONID.png
+write(toJSON(data$mstSkill), 'skills.json');
+
+#mstSvtSkill.skillId === mstSkill.id
+#num === skill position
+write(toJSON(data$mstSvtSkill), 'skillsData.json');
+
+#mstSkillDetail.id === mstSvtSkill.skillId
+write(toJSON(data$mstSkillDetail), 'skillsDetail.json');
+
+#there's also a skDetail that seems to be hardcoded...
+
+#ignored
+#master.mstSvtCommentAdd
+
+#still need to find out the overcharge and stuff for NP
+*/
+
 // add class filter
 export default {
   name: 'ServantList',

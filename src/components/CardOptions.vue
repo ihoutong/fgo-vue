@@ -22,7 +22,7 @@ export default {
   watch: {
     dropdown_value(val) {
       this.$emit('input', val);
-    }
-  }
-}
+    },
+  },
+};
 </script>

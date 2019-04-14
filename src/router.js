@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import ServantList from './views/ServantList.vue';
 import CraftEssenceList from './views/CraftEssenceList.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -16,10 +16,10 @@ export default new Router({
       path: '/ce',
       name: 'CraftEssenceList',
       component: CraftEssenceList,
-    }
+    },
   ],
   linkExactActiveClass: 'active',
-})
+});
 
 // {
 //   path: '/about',

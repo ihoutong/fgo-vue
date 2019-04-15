@@ -34,13 +34,10 @@ import TableHeader from '../components/TableHeader.vue';
 import ServantRow from '../components/ServantRow.vue';
 
 /*
-# contains the np name and rank this id === treasureDeviceId from above
-# typeText = ranking
-write(toJSON(data$mstTreasureDevice), "servantNpName.json")
-
 #mstQuest.id === mstTreasureDevice[x].condQuestId
 write(toJSON(data$mstQuest), "quests.json")
 
+contains characters that were stripped and replaced. Figure out what those are before using them
 #mstTreasureDeviceDetail.id === $mstTreasureDevice.id
 write(toJSON(data$mstTreasureDeviceDetail), 'npDescrption.json')
 
@@ -56,6 +53,7 @@ write(toJSON(data$mstSvtExp), 'expCurve.json');
 
 
 #iconId === icon id ()SkillIcon_ICONID.png
+mstSkill.id === mstSvtSill.skillId
 write(toJSON(data$mstSkill), 'skills.json');
 
 #mstSvtSkill.skillId === mstSkill.id

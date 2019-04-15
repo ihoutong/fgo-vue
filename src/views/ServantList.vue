@@ -17,17 +17,7 @@
     <table class="table">
       <TableHeader :displayFields="display_fields" @sort="sort_servants" />
       <tbody>
-        <tr v-for="servant in servants" :key="servant['ID']">
-          <td v-for="(value, field) in display_fields" :key="field">
-              <span v-if="typeof servant[field] === 'string' && servant[field].indexOf('.png') !== -1">
-                <img v-bind:src="require('../'+servant[field])" alt="">
-              </span>
-              <span v-else-if="field === 'cardIds'">
-                <img style="margin-right: -40px;" v-for="(card, key) in servant[field]" :key="key" :src="require(`../assets/images/cmdCard/${card}.png`)" alt="">
-              </span>
-              <span v-else>{{servant[field]}}</span>
-          </td>
-        </tr>
+        <ServantRow v-for="servant in servants" :servant="servant" :key="servant['ID']"/>
       </tbody>
     </table>
   </div>
@@ -36,18 +26,14 @@
 <script>
 import servant from '../assets/servant.json';
 import servantNp from '../assets/servantNp.json';
+import npName from '../assets/servantNpName.json';
 import servantStat from '../assets/servantStat.json';
 import classes from '../assets/class.json';
 import CardOptions from '../components/CardOptions.vue';
 import TableHeader from '../components/TableHeader.vue';
+import ServantRow from '../components/ServantRow.vue';
 
 /*
-write(toJSON(old_servants), "servants.bak.json");
-write(toJSON(valid_servants), "servant.json");
-write(toJSON(data$mstSvtLimit), "servantStat.json")
-#contains servant id, damage distribtuion, rankup/interlude
-write(toJSON(data$mstSvtTreasureDevice), "servantNp.json")
-
 # contains the np name and rank this id === treasureDeviceId from above
 # typeText = ranking
 write(toJSON(data$mstTreasureDevice), "servantNpName.json")
@@ -93,6 +79,7 @@ export default {
   components: {
     CardOptions,
     TableHeader,
+    ServantRow,
   },
   data() {
     return {
@@ -140,15 +127,23 @@ export default {
 
       // For now just pull the cardid. In the future, pull the damage distribution too.
       // Maybe even the strengthening availability
+      let npStat;
       let np = servantNp.find(obj => obj.num === 1 && obj.svtId === servantObj.id);
       const stat = servantStat.find(obj => obj.svtId === servantObj.id);
       const classData = classes.find(obj => obj.id === servantObj.classId);
+
+      // contains the np name and rank this id === treasureDeviceId from above
+      // typeText = ranking
 
       if (np === undefined) {
         np = {
           cardId: 1,
         };
+      } else {
+        npStat = npName.find(obj => obj.id === np.treasureDeviceId) || {};
       }
+
+      console.log(npStat);
 
       // np name
       // var np_name = master.mstTreasureDevice.find(obj => {

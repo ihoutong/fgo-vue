@@ -112,7 +112,7 @@ export default {
         hpMax: 'Max HP',
         atkMax: 'Max Attack',
         cardIds: 'Command Cards',
-        np: 'NP',
+        npCard: 'NP',
       },
       hide_filters: true,
       sort: {
@@ -127,7 +127,6 @@ export default {
 
       // For now just pull the cardid. In the future, pull the damage distribution too.
       // Maybe even the strengthening availability
-      let npStat;
       let np = servantNp.find(obj => obj.num === 1 && obj.svtId === servantObj.id);
       const stat = servantStat.find(obj => obj.svtId === servantObj.id);
       const classData = classes.find(obj => obj.id === servantObj.classId);
@@ -139,11 +138,9 @@ export default {
         np = {
           cardId: 1,
         };
-      } else {
-        npStat = npName.find(obj => obj.id === np.treasureDeviceId) || {};
       }
 
-      console.log(npStat);
+      const npStat = npName.find(obj => obj.id === np.treasureDeviceId) || {};
 
       // np name
       // var np_name = master.mstTreasureDevice.find(obj => {
@@ -156,7 +153,7 @@ export default {
       Object.keys(this.display_fields).forEach((key) => {
         if (['rarity', 'hpBase', 'atkBase', 'hpMax', 'atkMax'].indexOf(key) !== -1) {
           tempObj[key] = stat[key];
-        } else if (key === 'np') {
+        } else if (key === 'npCard') {
           tempObj[key] = `assets/images/cmdCard/${np.cardId}.png`;
         } else if (key === 'class') {
           tempObj[key] = `assets/images/class/class_${classData.iconImageId}_${tempObj.rarity}.png`;
@@ -173,6 +170,7 @@ export default {
         2: 0,
         3: 0,
       };
+      tempObj.npStat = npStat;
 
       // tempObj.np_name = np_name.ruby;
       for (let x = 0; x < tempObj.cardIds.length; x += 1) {

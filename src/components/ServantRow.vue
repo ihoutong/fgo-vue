@@ -13,7 +13,14 @@
   <td>
     <img style="margin-right: -40px;" v-for="(card, key) in servant.cardIds" :key="key" :src="require(`../assets/images/cmdCard/${card}.png`)" alt="">
   </td>
-  <td><img :src="require('../'+servant.np)" /></td>
+  <td>
+    <img class="d-block" :src="require('../'+servant.npCard)" />
+
+    <span class="d-block">{{servant.npStat.name}}</span>
+    <span class="d-block">{{servant.npStat.ruby}}</span>
+    <span class="d-block">Rank: {{servant.npStat.rank}}</span>
+    <span class="d-block">{{servant.npStat.typeText}}</span>
+  </td>
 </tr>
 </template>
 

@@ -29,6 +29,7 @@ import servantNp from '../assets/servantNp.json';
 import npName from '../assets/servantNpName.json';
 import servantStat from '../assets/servantStat.json';
 import classes from '../assets/class.json';
+
 import CardOptions from '../components/CardOptions.vue';
 import TableHeader from '../components/TableHeader.vue';
 import ServantRow from '../components/ServantRow.vue';
@@ -152,7 +153,7 @@ export default {
         if (['rarity', 'hpBase', 'atkBase', 'hpMax', 'atkMax'].indexOf(key) !== -1) {
           tempObj[key] = stat[key];
         } else if (key === 'npCard') {
-          tempObj[key] = `assets/images/cmdCard/${np.cardId}.png`;
+          tempObj[key] = np.cardId;
         } else if (key === 'class') {
           tempObj[key] = `assets/images/class/class_${classData.iconImageId}_${tempObj.rarity}.png`;
         } else if (key === 'image') {

@@ -11,22 +11,43 @@
   <td>{{servant.hpMax}}</td>
   <td>{{servant.atkMax}}</td>
   <td>
-    <img style="margin-right: -40px;" v-for="(card, key) in servant.cardIds" :key="key" :src="require(`../assets/images/cmdCard/${card}.png`)" alt="">
+    <span v-if="isMobile()">
+      <CommandCardMobile v-for="(card, key) in servant.cardIds" :key="key" :command="card" />
+    </span>
+    <span v-else>
+      <CommandCard v-for="(card, key) in servant.cardIds" :key="key" :command="card" />
+    </span>
   </td>
   <td>
-    <img class="d-block" :src="require('../'+servant.npCard)" />
-
-    <span class="d-block">{{servant.npStat.name}}</span>
-    <span class="d-block">{{servant.npStat.ruby}}</span>
-    <span class="d-block">Rank: {{servant.npStat.rank}}</span>
-    <span class="d-block">{{servant.npStat.typeText}}</span>
+    <CommandCardMobile v-if="isMobile()" :command="servant.npCard" />
+    <CommandCard v-else :command="servant.npCard" />
   </td>
 </tr>
 </template>
 
 <script>
+import CommandCard from './CommandCard.vue';
+import CommandCardMobile from './CommandCardMobile.vue';
+// <td>
+//   <img class="d-block" :src="require('../'+servant.npCard)" />
+
+//   <span class="d-block">{{servant.npStat.name}}</span>
+//   <span class="d-block">{{servant.npStat.ruby}}</span>
+//   <span class="d-block">Rank: {{servant.npStat.rank}}</span>
+//   <span class="d-block">{{servant.npStat.typeText}}</span>
+// </td>
+
 export default {
   name: 'ServantRow',
+  components: {
+    CommandCard,
+    CommandCardMobile,
+  },
   props: ['servant'],
+  methods: {
+    isMobile() {
+      return true;
+    },
+  },
 };
 </script>

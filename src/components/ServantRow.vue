@@ -28,6 +28,7 @@
 <script>
 import CommandCard from './CommandCard.vue';
 import CommandCardMobile from './CommandCardMobile.vue';
+import isMobile from '../helpers/isMobile.ts';
 // <td>
 //   <img class="d-block" :src="require('../'+servant.npCard)" />
 
@@ -44,10 +45,6 @@ export default {
     CommandCardMobile,
   },
   props: ['servant'],
-  methods: {
-    isMobile() {
-      return true;
-    },
-  },
+  mixins: [isMobile],
 };
 </script>

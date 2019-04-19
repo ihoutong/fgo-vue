@@ -29,14 +29,6 @@
 import CommandCard from './CommandCard.vue';
 import CommandCardMobile from './CommandCardMobile.vue';
 import isMobile from '../helpers/isMobile.ts';
-// <td>
-//   <img class="d-block" :src="require('../'+servant.npCard)" />
-
-//   <span class="d-block">{{servant.npStat.name}}</span>
-//   <span class="d-block">{{servant.npStat.ruby}}</span>
-//   <span class="d-block">Rank: {{servant.npStat.rank}}</span>
-//   <span class="d-block">{{servant.npStat.typeText}}</span>
-// </td>
 
 export default {
   name: 'ServantRow',

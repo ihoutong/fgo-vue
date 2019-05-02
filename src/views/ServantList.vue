@@ -24,11 +24,8 @@
 </template>
 
 <script>
-import servant from '../assets/servant.json';
-import servantNp from '../assets/servantNp.json';
-import npName from '../assets/servantNpName.json';
-import servantStat from '../assets/servantStat.json';
 import classes from '../assets/class.json';
+import master from '../assets/master.json';
 
 import CardOptions from '../components/CardOptions.vue';
 import TableHeader from '../components/TableHeader.vue';
@@ -121,60 +118,25 @@ export default {
     };
   },
   created() {
-    this.servants_original = servant.map((servantObj) => {
-      const tempObj = {};
+    this.servants_original = master.map((servantObj) => {
+      const tempObj = Object.assign({}, servantObj);
 
-      // For now just pull the cardid. In the future, pull the damage distribution too.
-      // Maybe even the strengthening availability
-      let np = servantNp.find(obj => obj.num === 1 && obj.svtId === servantObj.id);
-      const stat = servantStat.find(obj => obj.svtId === servantObj.id);
       const classData = classes.find(obj => obj.id === servantObj.classId);
 
-      // contains the np name and rank this id === treasureDeviceId from above
-      // typeText = ranking
-
+      let np = servantObj.noblePhantasms[0];
       if (np === undefined) {
         np = {
           cardId: 1,
         };
       }
 
-      const npStat = npName.find(obj => obj.id === np.treasureDeviceId) || {};
+      tempObj.class = `assets/images/class/class_${classData.iconImageId}_${tempObj.stats[0].rarity}.png`;
+      tempObj.npCard = np.cardId;
 
-      // np name
-      // var np_name = master.mstTreasureDevice.find(obj => {
-      //   return obj.id == np.treasureDeviceId
-      // });
-
-      // for (var x = 0; x < this.display_fields.length; x++){
-      //   var field_name = this.display_fields[x];
-
-      Object.keys(this.display_fields).forEach((key) => {
-        if (['rarity', 'hpBase', 'atkBase', 'hpMax', 'atkMax'].indexOf(key) !== -1) {
-          tempObj[key] = stat[key];
-        } else if (key === 'npCard') {
-          tempObj[key] = np.cardId;
-        } else if (key === 'class') {
-          tempObj[key] = `assets/images/class/class_${classData.iconImageId}_${tempObj.rarity}.png`;
-        } else if (key === 'image') {
-          tempObj[key] = `assets/images/faces/${servantObj.id}0.png`;
-        } else {
-          tempObj[key] = servantObj[key];
-        }
-      });
-      tempObj.collectionNo = parseInt(tempObj.collectionNo, 10);
-      tempObj.np_card = np.cardId;
-      tempObj.card_count = {
-        1: 0,
-        2: 0,
-        3: 0,
-      };
-      tempObj.npStat = npStat;
-
-      // tempObj.np_name = np_name.ruby;
-      for (let x = 0; x < tempObj.cardIds.length; x += 1) {
-        tempObj.card_count[tempObj.cardIds[x]] += 1;
-      }
+      tempObj.card_count = tempObj.cardIds.reduce((accumulator, current) => {
+        accumulator[current] += 1;
+        return accumulator;
+      }, { 1: 0, 2: 0, 3: 0 });
 
       return tempObj;
     });

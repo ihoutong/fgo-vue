@@ -10,7 +10,7 @@
           <CardOptions v-bind:display_name="'Number of Buster'" v-bind:values="cardoptions_values" v-model="buster"/>
           <CardOptions v-bind:display_name="'Number of Quick'" v-bind:values="cardoptions_values" v-model="quick"/>
           <CardOptions v-bind:display_name="'Number of Arts'" v-bind:values="cardoptions_values" v-model="arts"/>
-          <CardOptions v-bind:display_name="'Np Type'" v-bind:values="np_options" v-model="np_type" />
+          <CardOptions v-bind:display_name="'Np Type'" v-bind:values="np_options" v-model="npType" />
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
 
 <script>
 import classes from '../assets/class.json';
-import master from '../assets/master.json';
+import servant from '../assets/servant.json';
 
 import CardOptions from '../components/CardOptions.vue';
 import TableHeader from '../components/TableHeader.vue';
@@ -95,7 +95,7 @@ export default {
       buster: 0,
       quick: 0,
       arts: 0,
-      np_type: 0,
+      npType: 0,
       display_fields: {
         collectionNo: 'ID',
         rarity: 'Rarity',
@@ -118,7 +118,7 @@ export default {
     };
   },
   created() {
-    this.servants_original = master.map((servantObj) => {
+    this.servants_original = servant.map((servantObj) => {
       const tempObj = Object.assign({}, servantObj);
 
       const classData = classes.find(obj => obj.id === servantObj.classId);
@@ -140,40 +140,24 @@ export default {
 
       return tempObj;
     });
-
-    this.servants_original.sort((a, b) => {
-      if (a.collectionNo < b.collectionNo) {
-        return -1;
-      }
-
-      if (a.collectionNo > b.collectionNo) {
-        return 1;
-      }
-      return 0;
-    });
   },
   computed: {
     servants() {
-      const cardsSelected = {
-        1: this.arts,
-        2: this.buster,
-        3: this.quick,
-      };
-
       const filteredServants = this.servants_original.filter((obj) => {
-        for (let x in cardsSelected) {
-          if (cardsSelected[x] === 0) {
-            continue;
-          }
-
-          if (obj.card_count[x] !== cardsSelected[x]) {
-            return false;
-          }
+        if (this.arts > 0 && this.arts !== obj.card_count[1]) {
+          return false;
         }
 
-        return (this.np_type === 0 || this.np_type === obj.np_card);
-      });
+        if (this.buster > 0 && this.buster !== obj.card_count[2]) {
+          return false;
+        }
 
+        if (this.quick > 0 && this.quick !== obj.card_count[3]) {
+          return false;
+        }
+
+        return (this.npType === 0 || this.npType === obj.npCard);
+      });
 
       return filteredServants.sort((a, b) => {
         if (a[this.sort.field] < b[this.sort.field]) {
